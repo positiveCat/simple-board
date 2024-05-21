@@ -1,11 +1,11 @@
 package com.example.simpleboard.reply.db;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import com.example.simpleboard.post.db.PostEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +21,10 @@ public class ReplyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long postId;
+    @ManyToOne
+    @ToString.Exclude
+    @JsonIgnore
+    private PostEntity post; // post => _id => post_id
 
     private String userName;
 
@@ -31,6 +34,7 @@ public class ReplyEntity {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime repliedAt;

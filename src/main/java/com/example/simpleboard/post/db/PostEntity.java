@@ -1,12 +1,15 @@
 package com.example.simpleboard.post.db;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import com.example.simpleboard.board.db.BoardEntity;
+import com.example.simpleboard.reply.db.ReplyEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,7 +24,11 @@ public class PostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long boardId;
+    @ManyToOne
+    @JsonIgnore
+    @ToString.Exclude
+    @JoinColumn(name = "board_id")
+    private BoardEntity boardEntity; // board + "_id" 를 붙여서 찾는다.
 
     private String userName;
 
@@ -31,8 +38,17 @@ public class PostEntity {
 
     private String status;
 
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime postedAt;
+
+    @OneToMany(
+            mappedBy = "post"
+    )
+    @Builder.Default
+    private List<ReplyEntity> replyList = List.of();
 
 }
